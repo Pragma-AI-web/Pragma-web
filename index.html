@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pragma AI</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+  <style>
+    :root {
+      font-family: 'Montserrat', sans-serif;
+      --primary-color: #f5a623;
+      --secondary-color: #4aa8f5;
+      --dark-color: #2c3e50;
+      --light-color: #f9f9f9;
+      --card-bg: #ffffff;
+      --text-color: #2c3e50;
+      --input-bg: #ffffff;
+      --input-border: #ccc;
+      --accent-gradient: linear-gradient(45deg, #f5a623, #4aa8f5);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Montserrat', sans-serif; background: var(--light-color); color: var(--dark-color); }
+    header {
+      background: var(--dark-color);
+      padding: 0.3rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #fff;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .logo img {
+      max-height: 40px;
+      height: auto;
+      width: auto;
+      max-width: 150px;
+    }
+    .logo span {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+    nav ul { list-style: none; display: flex; gap: 1.5rem; }
+    nav ul li a { color: #fff; text-decoration: none; font-weight: 500; transition: color 0.3s; }
+    nav ul li a:hover { color: var(--secondary-color); }
+    .hero { height: 100vh; background: url('images/Fundamental_AI_Concepts.png') center/cover no-repeat; position: relative; display: flex; align-items: center; justify-content: center; text-align: center; color: #fff; }
+    .hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(245,166,35,0.6), rgba(74,168,245,0.6)); }
+    .hero-content { position: relative; z-index: 2; max-width: 900px; padding: 0 1rem; animation: fadeInUp 1s ease-out; }
+    .hero-content h1 { font-size: 3.5rem; margin-bottom: 1rem; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero-content p { font-size: 1.25rem; margin-bottom: 2rem; line-height: 1.5; }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .btn { background: var(--primary-color); color: #fff; padding: 0.75rem 1.75rem; border: none; border-radius: 50px; cursor: pointer; font-weight: 600; transition: background 0.3s, transform 0.3s; }
+    .btn:hover { background: var(--secondary-color); transform: scale(1.05); }
+    .container { width: 90%; max-width: 1100px; margin: auto; padding: 3rem 0; }
+    .section-title { text-align: center; font-size: 2rem; margin-bottom: 1.5rem; }
+    .programs { display: flex; flex-wrap: wrap; gap: 2rem; justify-content: center; }
+    .card { background: var(--card-bg); padding: 2rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); flex: 1; min-width: 280px; text-align: center; transition: transform 0.3s, box-shadow 0.3s; }
+    .card:hover { transform: translateY(-5px); box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+    .gallery{position:relative;width:90%;max-width:800px;margin:3rem auto;overflow:hidden}
+    .gallery img { max-width: 100%; border-radius: 10px; }
+    .gallery-caption {
+      display: block;
+      margin: 1rem auto 0;
+      text-align: center;
+      font-size: 1rem;
+      color: var(--dark-color);
+    }
+    form#registerForm { display: flex; flex-direction: column; gap: 1rem; max-width: 500px; margin: auto; }
+    form#registerForm input { padding: 0.75rem; border: 1px solid var(--input-border); border-radius: 5px; background: var(--input-bg); }
+    form#registerForm button { align-self: center; cursor: pointer; }
+    #formMessage { text-align: center; margin-top: 1rem; color: green; }
+    .countdown-box { text-align: center; background: var(--card-bg); padding: 2rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); display: inline-block; margin: auto; }
+    .timer { font-size: 1.2rem; color: var(--secondary-color); }
+    .payment-section { text-align: center; margin-top: 2rem; }
+    .social { display: flex; justify-content: center; gap: 1.5rem; margin: 2rem 0; }
+    .social a { color: var(--dark-color); font-size: 2.5rem; transition: color 0.3s; }
+    .social a:hover { color: var(--primary-color); }
+  </style>
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js';
+    import { getDatabase, ref, push } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js';
+    // import { gallery } from gallery;
+    // console.log("images", gallery)
+    const firebaseConfig = {
+      apiKey: "AIzaSyC8ZrSolde_isRlGxsnfHXDZEmw7EIUrvI",
+      authDomain: "pragma-ai-e2bf5.firebaseapp.com",
+      databaseURL: "https://pragma-ai-e2bf5-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "pragma-ai-e2bf5",
+      storageBucket: "pragma-ai-e2bf5.appspot.com",
+      messagingSenderId: "690328684674",
+      appId: "1:690328684674:web:2009d98426f08816264c9b"
+    };
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    document.addEventListener('DOMContentLoaded', () => {
+      // Form
+      const form = document.getElementById('registerForm');
+      form.addEventListener('submit', async e => {
+        e.preventDefault();
+        const data = ['name','email','phone','organization'].reduce((o, k) => (o[k] = form[k].value.trim(), o), {});
+        if (Object.values(data).some(v => !v)) return document.getElementById('formMessage').textContent = 'Please fill all fields.';
+        try { await push(ref(db,'registrations'), {...data, timestamp:Date.now()}); document.getElementById('formMessage').textContent='Thank you for registering!'; form.reset(); } 
+        catch(err){ console.error(err); document.getElementById('formMessage').textContent='Submission failed.'; }
+      });
+// Total number of images in the local 'images' folder
+const totalImages = 11; // adjust this count as you add/remove files
+
+// Generate a list of image URLs and captions based on naming convention
+const metadataList = Array.from({ length: totalImages }, (_, i) => ({
+  url: `images/${i+1}.jpeg`, // or .jpg if needed
+  caption: i<5?`Workshop conducted at Maruti India`:`Workshop conducted at Quest Global`
+}));
+
+const imgEl = document.getElementById('galleryImg');
+const capEl = document.getElementById('galleryCaption');
+let idx = 0;
+
+function rotate() {
+  const { url, caption } = metadataList[idx];
+  // fallback from .jpeg to .jpg if loading fails
+  imgEl.onerror = () => {
+    imgEl.onerror = null;
+    imgEl.src = url.replace(/\.jpe?g$/i, url.endsWith('.jpeg') ? url.replace(/\.jpeg$/i, '.jpg') : url.replace(/\.jpg$/i, '.jpeg'));
+  };
+  imgEl.src = url;
+  capEl.textContent = caption;
+  idx = (idx + 1) % metadataList.length;
+}
+
+// Start rotation
+setInterval(rotate, 1500);
+// Initial display
+rotate();
+
+      // Countdown
+      const timer=document.getElementById('timer'); setInterval(()=>{const d=new Date(),t=new Date('2025-05-02T10:00:00')-d;if(t<0) return timer.textContent='Webinar is live!';let ds=Math.floor(t/86400000),hs=Math.floor((t%86400000)/3600000),ms=Math.floor((t%3600000)/60000),ss=Math.floor((t%60000)/1000);timer.textContent=`${ds}d ${hs}h ${ms}m ${ss}s`;},1000);
+    });
+  </script>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <img src="images/logo.png" alt="Pragma AI Logo">
+      <span>Pragma AI</span>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="#about">About</a></li>
+        <li><a href="#usps">Why Us</a></li>
+        <li><a href="#programs">Programs</a></li>
+        <li><a href="#gallery">Gallery</a></li>
+        <li><a href="#register">Register</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Empower Your GenAI Journey</h1>
+      <p>Learn real-world GenAI from NVIDIA, Ola & Accenture experts—and start coding in our instant cloud labs.</p>
+      <button class="btn" onclick="document.querySelector('#register').scrollIntoView({behavior:'smooth'})">Get Started</button>
+    </div>
+  </section>
+  <section id="about" class="container">
+    <h2 class="section-title">About Us</h2>
+    <p>Pragma AI transforms GenAI enthusiasts into skilled developers through hands-on workshops and focused webinars backed by industry leaders and cloud access.</p>
+  </section>
+  <section id="usps" class="container">
+    <h2 class="section-title">Why Pragma AI?</h2>
+    <div class="programs">
+      <div class="card"><i class="fas fa-user-tie fa-3x"></i><h3>Industry Leader Mentors</h3><p>Exclusive insights from NVIDIA, Ola and Accenture experts on today’s GenAI trends.</p></div>
+      <div class="card"><i class="fas fa-cloud fa-3x"></i><h3>Instant Cloud Labs</h3><p>Fully-configured environment to build and test GenAI concepts—no setup required.</p></div>
+    </div>
+  </section>
+  <section id="programs" class="container">
+    <h2 class="section-title">Our Programs</h2>
+    <div class="programs">
+      <div class="card"><h3>Two-Day Workshop</h3><p>Instructor-led, hands-on building of production-ready GenAI applications.</p></div>
+      <div class="card"><h3>Intensive Webinar</h3><p>Deep dives into specialized GenAI topics for quick, targeted learning.</p></div>
+    </div>
+  </section>
+   <!-- Gallery Section -->
+   <section id="gallery" class="container">
+    <h2 class="section-title">Gallery</h2>
+    <div class="gallery">
+      <img id="galleryImg" src="images/1.jpeg" alt="Gallery image">
+      <p id="galleryCaption" class="gallery-caption">Image 1</p>
+    </div>
+  </section>
+  <section id="register" class="container">
+    <h2 class="section-title">Register</h2>
+    <form id="registerForm">
+      <input type="text" name="name" placeholder="Full Name" required>
+      <input type="email" name="email" placeholder="Email Address" required>
+      <input type="tel" name="phone" placeholder="Phone Number" required>
+      <input type="text" name="organization" placeholder="Organization" required>
+      <button class="btn" type="submit">Submit</button>
+    </form>
+    <div id="formMessage"></div>
+  </section>
+  <section id="contact" class="container">
+    <h2 class="section-title">Connect With Us</h2>
+    <div class="social">
+      <a href="https://www.linkedin.com/company/pragma-ai/" target="_blank"><i class="fab fa-linkedin"></i></a>
+      <a href="https://www.instagram.com/pragmaai/" target="_blank"><i class="fab fa-instagram"></i></a>
+    </div>
+  </section>
+</body>
+</html>
